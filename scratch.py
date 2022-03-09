@@ -1,4 +1,6 @@
 import pandas as pd
+
+import tools
 from tools import hashtag_counter, return_first_string_match
 from sklearn.tree import DecisionTreeClassifier, plot_tree
 from sklearn.model_selection import train_test_split
@@ -85,6 +87,10 @@ tfidf = pd.DataFrame(doc_vec.toarray().transpose(), index = vectorizer.get_featu
 tfidf.columns = posts['post_id']
 tfidf = tfidf.T
 
+# A little experimentation with the max_features and min_df revealed that better differentiation...
+# seems to occur with roughly this number of features and minimum frequency.
+# The words and word pairs seem to make sense and seem appropriate
+
 #%%
 # Just test out one example
 
@@ -115,11 +121,16 @@ for uid in users['uid'].unique():
     all_users.append(degenerate)
     all_unique_scores.append(unique_scores)
 
-print(sum(all_users)/49)
-print(sum(all_unique_scores)/49)
+print(sum(all_users)/len(all_users))
+print(sum(all_unique_scores)/len(all_unique_scores))
 
-# Roughly half of the other posts distinguished on average.
+# Roughly half of the other posts distinguished on average. Not too bad an outcome.
 
+#%%
+mod = tools.PostFeeder()
+mod.load_data()
+mod.fit()
+out = mod.predict('e31e7cf3-9c4b-4da7-be33-db0e0cf4edd7')
 
 
 
